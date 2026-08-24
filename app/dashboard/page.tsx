@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { supabase } from '@/lib/supabaseClient';
+import { useRouter } from 'next/navigation'; // Part 1: Import useRouter
 
 export default function LoginPage() {
 const [email, setEmail] = useState('');
@@ -9,6 +10,7 @@ const [password, setPassword] = useState('');
 const [fullName, setFullName] = useState('');
 const [isSignUp, setIsSignUp] = useState(false);
 const [message, setMessage] = useState('');
+const router = useRouter(); // Part 2: Initialize router
 
 const handleAuth = async (e: React.FormEvent) => {
 e.preventDefault();
@@ -18,9 +20,6 @@ if (isSignUp) {
 const { data, error } = await supabase.auth.signUp({
 email,
 password,
-options: {
-emailRedirectTo: 'http://localhost:3000/login',
-},
 });
 
 if (error) {
@@ -41,6 +40,7 @@ if (error) {
 setMessage(error.message);
 } else {
 setMessage('Logged in successfully!');
+router.push('/dashboard'); // Part 3: Redirect after successful login
 }
 }
 };
