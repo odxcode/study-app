@@ -30,6 +30,8 @@ export const supabase = isSupabaseConfigured
       auth: {
         signUp: async () => ({ data: null, error: authError }),
         signInWithPassword: async () => ({ error: authError }),
+        getUser: async () => ({ data: { user: null }, error: authError }),
+        signOut: async () => ({ error: authError }),
       },
       from: (_table: string) => ({
         insert: async () => ({ error: authError }),

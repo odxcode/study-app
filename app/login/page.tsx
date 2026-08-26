@@ -1,9 +1,11 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { supabase } from '@/lib/supabaseClient';
 
 export default function LoginPage() {
+const router = useRouter();
 const [email, setEmail] = useState('');
 const [password, setPassword] = useState('');
 const [fullName, setFullName] = useState('');
@@ -38,6 +40,7 @@ if (error) {
 setMessage(error.message);
 } else {
 setMessage('Logged in successfully!');
+router.push('/dashboard');
 }
 }
 };
