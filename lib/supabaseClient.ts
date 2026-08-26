@@ -3,7 +3,18 @@ import { createClient } from '@supabase/supabase-js';
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL ?? '';
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? '';
 
-export const isSupabaseConfigured = Boolean(supabaseUrl && supabaseAnonKey);
+const isValidSupabaseUrl = (() => {
+  try {
+    const url = new URL(supabaseUrl);
+    return url.protocol === 'http:' || url.protocol === 'https:';
+  } catch {
+    return false;
+  }
+})();
+
+export const isSupabaseConfigured = Boolean(
+  isValidSupabaseUrl && supabaseAnonKey,
+);
 
 const authError = {
   message:
