@@ -1,7 +1,10 @@
 import { createClient } from '@supabase/supabase-js';
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL ?? '';
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? '';
+const configuredSupabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL?.trim() ?? '';
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY?.trim() ?? '';
+
+// Supabase expects the project root URL; API paths are added by the client.
+const supabaseUrl = configuredSupabaseUrl.replace(/\/(?:rest\/v1|auth\/v1)\/?$/, '');
 
 const isValidSupabaseUrl = (() => {
   try {
@@ -13,7 +16,7 @@ const isValidSupabaseUrl = (() => {
 })();
 
 export const isSupabaseConfigured = Boolean(
-  isValidSupabaseUrl && supabaseAnonKey,
+  isValidSupabaseUrl && supabaseAnonKey.trim(),
 );
 
 const authError = {
