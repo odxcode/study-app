@@ -47,7 +47,11 @@ router.push('/dashboard');
 
 return (
 <main className="min-h-screen flex items-center justify-center bg-gray-100 p-4">
-<div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md text-black">
+<div className="w-full max-w-md text-black">
+<div className="font-adequate mb-6 text-center text-5xl font-bold tracking-wide text-gray-900">
+Icarus
+</div>
+<div className="bg-white p-8 rounded-lg shadow-md">
 <h1 className="text-2xl font-bold mb-6 text-center text-gray-800">
 {isSignUp ? 'Create Account' : 'Study Tracker Login'}
 </h1>
@@ -108,6 +112,7 @@ className="w-full mt-4 text-sm text-gray-600 underline text-center block"
 >
 {isSignUp ? 'Already have an account? Log In' : "Don't have an account? Sign Up"}
 </button>
+</div>
 </div>
 </main>
 );

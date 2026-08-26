@@ -24,3 +24,7 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+.font-adequate {
+  font-family: "Adequate", Arial, Helvetica, sans-serif;
+}

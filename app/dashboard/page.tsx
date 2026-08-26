@@ -42,6 +42,9 @@ export default function DashboardPage() {
   return (
     <main className="min-h-screen bg-gray-100 p-8 text-gray-900">
       <div className="mx-auto max-w-3xl rounded-lg bg-white p-8 shadow-md">
+        <div className="font-adequate mb-8 text-center text-5xl font-bold tracking-wide text-gray-900">
+          Icarus
+        </div>
         <h1 className="text-3xl font-bold">Study Tracker</h1>
         <p className="mt-4">Welcome{email ? `, ${email}` : ''}.</p>
         <a
@@ -57,6 +60,9 @@ export default function DashboardPage() {
         >
           Log Out
         </button>
+      </div>
+      <div className="font-adequate mx-auto mt-16 max-w-3xl rounded-lg bg-white p-8 text-center text-4xl font-bold tracking-wide text-gray-900 shadow-md">
+        Defly the Odds
       </div>
     </main>
   );
