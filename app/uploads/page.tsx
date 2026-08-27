@@ -80,13 +80,13 @@ export default function UploadsPage() {
   };
 
   return (
-    <main className="min-h-screen bg-gray-100 p-8 text-gray-900">
-      <div className="mx-auto max-w-2xl rounded-lg bg-white p-8 shadow-md">
-        <a href="/dashboard" className="text-sm text-blue-600 underline">
+    <main className="min-h-screen bg-[#2f2f2f] p-8 text-white">
+      <div className="mx-auto max-w-2xl rounded-lg bg-[#3a3a3a] p-8 shadow-md">
+        <a href="/dashboard" className="text-sm text-blue-300 underline">
           Back to dashboard
         </a>
         <h1 className="mt-4 text-3xl font-bold">Study Uploads</h1>
-        <p className="mt-2 text-gray-600">
+        <p className="mt-2 text-gray-200">
           Upload a short video or picture of yourself studying. Every upload stays pending until an admin reviews it.
         </p>
 
@@ -101,7 +101,7 @@ export default function UploadsPage() {
             onChange={handleFileChange}
             className="block w-full rounded-md border border-gray-300 p-3"
           />
-          <p className="text-sm text-gray-500">MP4, WebM, QuickTime, JPG, or PNG; maximum 100 MB.</p>
+          <p className="text-sm text-gray-300">MP4, WebM, QuickTime, JPG, or PNG; maximum 100 MB.</p>
           <button
             type="submit"
             disabled={isUploading}
@@ -111,7 +111,7 @@ export default function UploadsPage() {
           </button>
         </form>
 
-        {message && <p className="mt-5 font-medium text-blue-700">{message}</p>}
+        {message && <p className="mt-5 font-medium text-blue-300">{message}</p>}
       </div>
     </main>
   );
