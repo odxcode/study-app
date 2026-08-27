@@ -54,7 +54,7 @@ export default function UploadsPage() {
 
     if (uploadError) {
       setIsUploading(false);
-      setMessage(uploadError.message);
+      setMessage(`Storage upload failed: ${uploadError.message}`);
       return;
     }
 
@@ -70,7 +70,7 @@ export default function UploadsPage() {
     if (metadataError) {
       await supabase.storage.from(BUCKET).remove([storagePath]);
       setIsUploading(false);
-      setMessage(metadataError.message);
+      setMessage(`Upload record failed: ${metadataError.message}`);
       return;
     }
 
