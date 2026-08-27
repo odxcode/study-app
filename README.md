@@ -53,6 +53,19 @@ allow authenticated users to upload, view, and delete objects only under their
 own user ID folder. An admin can review records by changing `status` to
 `approved` or `rejected` in Supabase.
 
+The Storage insert policy is required for uploads. If the upload page reports
+`Storage upload failed: new row violates row-level security policy`, run this
+policy in the Supabase SQL editor:
+
+```sql
+create policy "Users can upload their own study files"
+  on storage.objects for insert to authenticated
+  with check (
+    bucket_id = 'study-videos'
+    and (storage.foldername(name))[1] = auth.uid()::text
+  );
+```
+
 Set `NEXT_PUBLIC_ADMIN_EMAIL` in `.env.local` and Vercel to the admin account's
 email to enable the `/admin` review page. The page also requires these policies
 so the admin can read and update uploads and view their private files:
