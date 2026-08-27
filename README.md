@@ -48,7 +48,10 @@ create policy "Users can delete their own upload records"
   using (auth.uid() = user_id);
 ```
 
-Create the `study-videos` bucket in **Storage** and add Storage policies that
+Run the complete setup in [`supabase/schema.sql`](C:/Users/owend/study-app.worktrees/website-font-and-background-update/supabase/schema.sql)
+in the Supabase SQL editor. It creates the `study_uploads` table, private
+`study-videos` bucket, and user policies. Create the `study-videos` bucket in
+**Storage** and add Storage policies that
 allow authenticated users to upload, view, and delete objects only under their
 own user ID folder. An admin can review records by changing `status` to
 `approved` or `rejected` in Supabase.
