@@ -1,114 +1,42 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { supabase } from '@/lib/supabaseClient';
-import { useRouter } from 'next/navigation'; // Part 1: Import useRouter
 
-export default function LoginPage() {
-const [email, setEmail] = useState('');
-const [password, setPassword] = useState('');
-const [fullName, setFullName] = useState('');
-const [isSignUp, setIsSignUp] = useState(false);
-const [message, setMessage] = useState('');
-const router = useRouter(); // Part 2: Initialize router
+export default function DashboardPage() {
+  const router = useRouter();
+  const [email, setEmail] = useState('');
 
-const handleAuth = async (e: React.FormEvent) => {
-e.preventDefault();
-setMessage('');
+  useEffect(() => {
+    let active = true;
+    const loadUser = async () => {
+      const { data, error } = await supabase.auth.getUser();
+      if (error || !data.user) {
+        router.replace('/login');
+        return;
+      }
+      if (active) setEmail(data.user.email ?? '');
+    };
+    void loadUser();
+    return () => { active = false; };
+  }, [router]);
 
-if (isSignUp) {
-const { data, error } = await supabase.auth.signUp({
-email,
-password,
-});
+  const handleSignOut = async () => {
+    const { error } = await supabase.auth.signOut();
+    if (!error) router.replace('/login');
+  };
 
-if (error) {
-setMessage(error.message);
-} else if (data.user) {
-await supabase.from('profiles').insert([
-{ id: data.user.id, full_name: fullName, total_debt: 0 }
-]);
-setMessage('Sign up successful! Check your email to confirm or try logging in.');
-}
-} else {
-const { error } = await supabase.auth.signInWithPassword({
-email,
-password,
-});
-
-if (error) {
-setMessage(error.message);
-} else {
-setMessage('Logged in successfully!');
-router.push('/dashboard'); // Part 3: Redirect after successful login
-}
-}
-};
-
-return (
-<main className="min-h-screen flex items-center justify-center bg-gray-100 p-4">
-<div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md text-black">
-<h1 className="text-2xl font-bold mb-6 text-center text-gray-800">
-{isSignUp ? 'Create Account' : 'Study Tracker Login'}
-</h1>
-
-<form onSubmit={handleAuth} className="space-y-4">
-{isSignUp && (
-<div>
-<label className="block text-sm font-medium text-gray-700">Full Name</label>
-<input
-type="text"
-required
-value={fullName}
-onChange={(e) => setFullName(e.target.value)}
-className="w-full mt-1 p-2 border rounded-md"
-placeholder="Alex Smith"
-/>
-</div>
-)}
-
-<div>
-<label className="block text-sm font-medium text-gray-700">Email</label>
-<input
-type="email"
-required
-value={email}
-onChange={(e) => setEmail(e.target.value)}
-className="w-full mt-1 p-2 border rounded-md"
-placeholder="alex@example.com"
-/>
-</div>
-
-<div>
-<label className="block text-sm font-medium text-gray-700">Password</label>
-<input
-type="password"
-required
-value={password}
-onChange={(e) => setPassword(e.target.value)}
-className="w-full mt-1 p-2 border rounded-md"
-/>
-</div>
-
-<button
-type="submit"
-className="w-full bg-blue-600 text-white p-2 rounded-md hover:bg-blue-700 transition font-semibold"
->
-{isSignUp ? 'Sign Up' : 'Log In'}
-</button>
-</form>
-
-{message && (
-<p className="mt-4 text-center text-sm font-medium text-blue-600">{message}</p>
-)}
-
-<button
-onClick={() => setIsSignUp(!isSignUp)}
-className="w-full mt-4 text-sm text-gray-600 underline text-center block"
->
-{isSignUp ? 'Already have an account? Log In' : "Don't have an account? Sign Up"}
-</button>
-</div>
-</main>
-);
+  return (
+    <main className="min-h-screen bg-[#2f2f2f] p-8 text-white">
+      <div className="mx-auto max-w-3xl rounded-lg bg-[#3a3a3a] p-8 shadow-md">
+        <div className="font-adequate mb-8 text-center text-5xl font-bold tracking-wide">Icarus</div>
+        <h1 className="text-3xl font-bold">Study Tracker</h1>
+        <p className="mt-4">Welcome{email ? `, ${email}` : ''}.</p>
+        <a href="/uploads" className="mt-6 inline-block rounded-md bg-blue-600 px-4 py-2 font-semibold text-white hover:bg-blue-700">Upload Study Video</a>
+        <button type="button" onClick={handleSignOut} className="ml-3 rounded-md border border-gray-300 px-4 py-2 font-semibold text-gray-200 hover:bg-gray-700">Log Out</button>
+      </div>
+      <div className="font-adequate mx-auto mt-16 max-w-3xl rounded-lg bg-[#3a3a3a] p-8 text-center text-4xl font-bold tracking-wide shadow-md">Defly the Odds</div>
+    </main>
+  );
 }

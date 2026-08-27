@@ -16,6 +16,66 @@ bun dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
+## Study uploads setup
+
+The uploads page uses a private Supabase Storage bucket named `study-videos` and a
+`study_uploads` table. Create both in Supabase before using `/uploads`:
+
+```sql
+create table public.study_uploads (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid not null references auth.users(id) on delete cascade,
+  storage_path text not null unique,
+  original_name text not null,
+  mime_type text not null,
+  file_size bigint not null,
+  status text not null default 'pending' check (status in ('pending', 'approved', 'rejected')),
+  created_at timestamptz not null default now()
+);
+
+alter table public.study_uploads enable row level security;
+
+create policy "Users can create their own upload records"
+  on public.study_uploads for insert to authenticated
+  with check (auth.uid() = user_id);
+
+create policy "Users can view their own upload records"
+  on public.study_uploads for select to authenticated
+  using (auth.uid() = user_id);
+
+create policy "Users can delete their own upload records"
+  on public.study_uploads for delete to authenticated
+  using (auth.uid() = user_id);
+```
+
+Create the `study-videos` bucket in **Storage** and add Storage policies that
+allow authenticated users to upload, view, and delete objects only under their
+own user ID folder. An admin can review records by changing `status` to
+`approved` or `rejected` in Supabase.
+
+```sql
+create policy "Users can upload their own study files"
+  on storage.objects for insert to authenticated
+  with check (
+    bucket_id = 'study-videos'
+    and (storage.foldername(name))[1] = auth.uid()::text
+  );
+
+create policy "Users can view their own study files"
+  on storage.objects for select to authenticated
+  using (
+    bucket_id = 'study-videos'
+    and (storage.foldername(name))[1] = auth.uid()::text
+  );
+
+create policy "Users can delete their own study files"
+  on storage.objects for delete to authenticated
+  using (
+    bucket_id = 'study-videos'
+    and (storage.foldername(name))[1] = auth.uid()::text
+  );
+```
+
 You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
