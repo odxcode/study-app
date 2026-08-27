@@ -53,6 +53,24 @@ allow authenticated users to upload, view, and delete objects only under their
 own user ID folder. An admin can review records by changing `status` to
 `approved` or `rejected` in Supabase.
 
+Set `NEXT_PUBLIC_ADMIN_EMAIL` in `.env.local` and Vercel to the admin account's
+email to enable the `/admin` review page. The page also requires these policies
+so the admin can read and update uploads and view their private files:
+
+```sql
+create policy "Admin can review uploads"
+  on public.study_uploads for all to authenticated
+  using ((auth.jwt() ->> 'email') = 'your-admin@example.com')
+  with check ((auth.jwt() ->> 'email') = 'your-admin@example.com');
+
+create policy "Admin can view study files"
+  on storage.objects for select to authenticated
+  using (
+    bucket_id = 'study-videos'
+    and (auth.jwt() ->> 'email') = 'your-admin@example.com'
+  );
+```
+
 ```sql
 create policy "Users can upload their own study files"
   on storage.objects for insert to authenticated
