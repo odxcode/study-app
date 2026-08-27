@@ -39,3 +39,7 @@ select {
   background: #454545;
   color: var(--foreground);
 }
+
+.font-adequate {
+  font-family: "Adequate", Arial, Helvetica, sans-serif;
+}
