@@ -35,7 +35,7 @@ body {
 .page-decoration {
   --accent: #b86f4a;
   position: fixed;
-  z-index: 0;
+  z-index: 2;
   inset: 0;
   overflow: hidden;
   pointer-events: none;
