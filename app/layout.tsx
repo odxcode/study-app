@@ -12,7 +12,15 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       lang="en"
       className="h-full antialiased"
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col">
+        <div className="page-decoration" aria-hidden="true">
+          <span className="decoration-circle decoration-circle-top" />
+          <span className="decoration-circle decoration-circle-bottom" />
+          <span className="decoration-swirl decoration-swirl-left" />
+          <span className="decoration-swirl decoration-swirl-right" />
+        </div>
+        <div className="page-content">{children}</div>
+      </body>
     </html>
   );
 }

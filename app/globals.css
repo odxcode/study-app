@@ -24,6 +24,77 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: "Adequate", sans-serif;
+  overflow-x: hidden;
+}
+
+.page-content {
+  position: relative;
+  z-index: 1;
+}
+
+.page-decoration {
+  --accent: #b86f4a;
+  position: fixed;
+  z-index: 0;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.decoration-circle,
+.decoration-swirl {
+  position: absolute;
+  display: block;
+  border: 2px solid var(--accent);
+  opacity: 0.45;
+}
+
+.decoration-circle {
+  border-radius: 9999px;
+}
+
+.decoration-circle-top {
+  top: 9vh;
+  left: -52px;
+  width: 150px;
+  height: 150px;
+}
+
+.decoration-circle-bottom {
+  right: -44px;
+  bottom: 12vh;
+  width: 128px;
+  height: 128px;
+}
+
+.decoration-swirl {
+  width: 190px;
+  height: 190px;
+  border-radius: 50%;
+  border-right-color: transparent;
+  border-bottom-color: transparent;
+  transform: rotate(-38deg);
+}
+
+.decoration-swirl::after {
+  position: absolute;
+  inset: 18px;
+  border: 2px solid var(--accent);
+  border-radius: 50%;
+  border-left-color: transparent;
+  border-bottom-color: transparent;
+  content: "";
+}
+
+.decoration-swirl-left {
+  top: 38%;
+  left: -120px;
+}
+
+.decoration-swirl-right {
+  right: -120px;
+  bottom: 32%;
+  transform: rotate(142deg);
 }
 
 button,
@@ -42,4 +113,20 @@ select {
 
 .font-adequate {
   font-family: "Adequate", Arial, Helvetica, sans-serif;
+}
+
+@media (max-width: 640px) {
+  .decoration-circle-top,
+  .decoration-circle-bottom {
+    opacity: 0.28;
+  }
+
+  .decoration-swirl {
+    opacity: 0.25;
+    transform: scale(0.7) rotate(-38deg);
+  }
+
+  .decoration-swirl-right {
+    transform: scale(0.7) rotate(142deg);
+  }
 }
