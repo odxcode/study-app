@@ -34,6 +34,7 @@ export default function DashboardPage() {
         <h1 className="text-3xl font-bold">Study Tracker</h1>
         <p className="mt-4">Welcome{email ? `, ${email}` : ''}.</p>
         <a href="/uploads" className="mt-6 inline-block rounded-md bg-blue-600 px-4 py-2 font-semibold text-white hover:bg-blue-700">Upload Study Video</a>
+        <a href="/admin" className="ml-3 inline-block rounded-md border border-gray-300 px-4 py-2 font-semibold text-gray-200 hover:bg-gray-700">Admin Review</a>
         <button type="button" onClick={handleSignOut} className="ml-3 rounded-md border border-gray-300 px-4 py-2 font-semibold text-gray-200 hover:bg-gray-700">Log Out</button>
       </div>
       <div className="font-adequate mx-auto mt-16 max-w-3xl rounded-lg bg-[#3a3a3a] p-8 text-center text-4xl font-bold tracking-wide shadow-md">Defly the Odds</div>
