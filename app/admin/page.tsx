@@ -70,12 +70,29 @@ export default function AdminPage() {
   }, [loadUploads]);
 
   const updateStatus = async (id: string, status: 'approved' | 'rejected') => {
-    const { error } = await supabase.from('study_uploads').update({ status }).eq('id', id);
-    if (error) {
-      setMessage(error.message);
+    const { data: userData, error: userError } = await supabase.auth.getUser();
+    if (userError || !userData.user) {
+      router.replace('/login');
       return;
     }
-    // Refresh to ensure persisted data and correct RLS behavior
+
+    if (!ADMIN_EMAIL || userData.user.email?.toLowerCase() !== ADMIN_EMAIL) {
+      setMessage('Admin access is required to approve uploads.');
+      return;
+    }
+
+    const { error } = await supabase
+      .from('study_uploads')
+      .update({ status })
+      .eq('id', id)
+      .select();
+
+    if (error) {
+      setMessage(`Update failed: ${error.message}`);
+      return;
+    }
+
+    setMessage(`Upload marked as ${status}.`);
     await loadUploads();
   };
 

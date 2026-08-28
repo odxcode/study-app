@@ -32,6 +32,20 @@ create policy "Users can delete their own upload records"
   on public.study_uploads for delete to authenticated
   using (auth.uid() = user_id);
 
+-- Admin-only access for approval/rejection. Replace the email below with your admin account email.
+drop policy if exists "Admins can read all upload records"
+on public.study_uploads;
+create policy "Admins can read all upload records"
+on public.study_uploads for select to authenticated
+using (auth.email() = 'admin@example.com');
+
+drop policy if exists "Admins can update all upload statuses"
+on public.study_uploads;
+create policy "Admins can update all upload statuses"
+on public.study_uploads for update to authenticated
+using (auth.email() = 'admin@example.com')
+with check (auth.email() = 'admin@example.com');
+
 insert into storage.buckets (id, name, public)
 values ('study-videos', 'study-videos', false)
 on conflict (id) do nothing;
