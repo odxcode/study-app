@@ -118,6 +118,7 @@ export default function UploadsPage() {
       original_name: file.name,
       mime_type: file.type,
       file_size: file.size,
+      uploaded_by_email: userData.user.email ?? null,
       status: 'pending',
     });
 
