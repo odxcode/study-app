@@ -7,12 +7,22 @@ create table if not exists public.study_uploads (
   original_name text not null,
   mime_type text not null,
   file_size bigint not null,
+  uploaded_by_email text,
   status text not null default 'pending'
     check (status in ('pending', 'approved', 'rejected')),
   created_at timestamptz not null default now()
 );
 
 alter table public.study_uploads enable row level security;
+
+alter table public.study_uploads
+  add column if not exists uploaded_by_email text;
+
+update public.study_uploads
+set uploaded_by_email = auth.users.email
+from auth.users
+where public.study_uploads.user_id = auth.users.id
+  and public.study_uploads.uploaded_by_email is null;
 
 drop policy if exists "Users can create their own upload records"
   on public.study_uploads;
@@ -37,14 +47,14 @@ drop policy if exists "Admins can read all upload records"
 on public.study_uploads;
 create policy "Admins can read all upload records"
 on public.study_uploads for select to authenticated
-using (auth.email() = 'admin@example.com');
+using (auth.email() = 'owendail2006@gmail.com');
 
 drop policy if exists "Admins can update all upload statuses"
 on public.study_uploads;
 create policy "Admins can update all upload statuses"
 on public.study_uploads for update to authenticated
-using (auth.email() = 'admin@example.com')
-with check (auth.email() = 'admin@example.com');
+using (auth.email() = 'owendail2006@gmail.com')
+with check (auth.email() = 'owendail2006@gmail.com');
 
 insert into storage.buckets (id, name, public)
 values ('study-videos', 'study-videos', false)

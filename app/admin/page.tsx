@@ -13,6 +13,7 @@ type Upload = {
   mime_type: string;
   file_size: number;
   storage_path: string;
+  uploaded_by_email?: string | null;
   status: 'pending' | 'approved' | 'rejected';
   created_at: string;
   previewUrl?: string | null;
@@ -39,7 +40,7 @@ export default function AdminPage() {
 
     const { data, error } = await supabase
       .from('study_uploads')
-      .select('id, original_name, mime_type, file_size, storage_path, status, created_at')
+      .select('id, original_name, mime_type, file_size, storage_path, uploaded_by_email, status, created_at')
       .order('created_at', { ascending: false });
 
     if (error) {
@@ -120,6 +121,9 @@ export default function AdminPage() {
                 <img alt={upload.original_name} className="mb-4 max-h-72 w-full rounded-md object-contain" src={upload.previewUrl ?? undefined} />
               ))}
               <h2 className="font-semibold">{upload.original_name}</h2>
+              <p className="mt-1 text-sm text-gray-300">
+                Uploaded by: {upload.uploaded_by_email ?? 'Unknown user'}
+              </p>
               <p className="mt-1 text-sm text-gray-300">{(upload.file_size / 1024 / 1024).toFixed(1)} MB · {new Date(upload.created_at).toLocaleString()}</p>
               <div className="mt-4 flex gap-3">
                 <button type="button" onClick={() => updateStatus(upload.id, 'approved')} className="rounded-md bg-green-600 px-4 py-2 font-semibold hover:bg-green-700">Approve</button>
