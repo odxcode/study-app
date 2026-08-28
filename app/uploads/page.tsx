@@ -42,7 +42,7 @@ export default function UploadsPage() {
 
     const { data, error } = await supabase
       .from('study_uploads')
-      .select('id, original_name, mime_type, file_size, storage_path, status, created_at')
+      .select('*')
       .eq('user_id', userData.user.id)
       .order('created_at', { ascending: false });
 
@@ -112,15 +112,31 @@ export default function UploadsPage() {
       return;
     }
 
-    const { error: metadataError } = await supabase.from('study_uploads').insert({
+    const baseUploadRecord = {
       user_id: userData.user.id,
       storage_path: storagePath,
       original_name: file.name,
       mime_type: file.type,
       file_size: file.size,
-      uploaded_by_email: userData.user.email ?? null,
       status: 'pending',
-    });
+      ...(userData.user.email ? { uploaded_by_email: userData.user.email } : {}),
+    };
+
+    let metadataError = null as { message: string } | null;
+    const insertResult = await supabase.from('study_uploads').insert(baseUploadRecord);
+    metadataError = insertResult.error;
+
+    if (metadataError && metadataError.message.toLowerCase().includes('uploaded_by_email')) {
+      const fallbackResult = await supabase.from('study_uploads').insert({
+        user_id: userData.user.id,
+        storage_path: storagePath,
+        original_name: file.name,
+        mime_type: file.type,
+        file_size: file.size,
+        status: 'pending',
+      });
+      metadataError = fallbackResult.error;
+    }
 
     if (metadataError) {
       await supabase.storage.from(BUCKET).remove([storagePath]);

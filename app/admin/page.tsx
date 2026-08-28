@@ -40,7 +40,7 @@ export default function AdminPage() {
 
     const { data, error } = await supabase
       .from('study_uploads')
-      .select('id, original_name, mime_type, file_size, storage_path, uploaded_by_email, status, created_at')
+      .select('*')
       .order('created_at', { ascending: false });
 
     if (error) {
@@ -122,7 +122,7 @@ export default function AdminPage() {
               ))}
               <h2 className="font-semibold">{upload.original_name}</h2>
               <p className="mt-1 text-sm text-gray-300">
-                Uploaded by: {upload.uploaded_by_email ?? 'Unknown user'}
+                Uploaded by: {typeof upload.uploaded_by_email === 'string' && upload.uploaded_by_email ? upload.uploaded_by_email : 'Unknown user'}
               </p>
               <p className="mt-1 text-sm text-gray-300">{(upload.file_size / 1024 / 1024).toFixed(1)} MB · {new Date(upload.created_at).toLocaleString()}</p>
               <div className="mt-4 flex gap-3">
